@@ -148,3 +148,48 @@ CREATE TRIGGER oferta_bi
 BEFORE INSERT ON oferta
 FOR EACH ROW
 EXECUTE FUNCTION trg_oferta_validar();
+
+-- -----------------------------------------------------------------------------
+-- 5. Funcion cerrar_subasta(p_id) - procesar el cierre y asignar ganador
+-- -----------------------------------------------------------------------------
+-- Valida que la subasta exista, que su plazo haya vencido (fecha_cierre <= now())
+-- y que no tenga ganador asignado. Si pasa, toma la mayor oferta (desempate por
+-- nro_oferta mas bajo) y setea email_ganador / monto_ganador. Si cerro sin
+-- ofertas, termina sin error y sin modificar (idempotente: re-invocar no falla).
+CREATE OR REPLACE FUNCTION cerrar_subasta(p_id INTEGER)
+RETURNS VOID AS $$
+DECLARE
+    v_sub    subasta%ROWTYPE;
+    v_email  VARCHAR(255);
+    v_monto  NUMERIC(12,2);
+BEGIN
+    SELECT * INTO v_sub FROM subasta WHERE id = p_id;
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'La subasta % no existe.', p_id;
+    END IF;
+
+    IF v_sub.fecha_cierre > now() THEN
+        RAISE EXCEPTION 'La subasta % todavia esta abierta (cierra %).', p_id, v_sub.fecha_cierre;
+    END IF;
+
+    IF v_sub.email_ganador IS NOT NULL THEN
+        RAISE EXCEPTION 'La subasta % ya fue cerrada con ganador %.', p_id, v_sub.email_ganador;
+    END IF;
+
+    -- Mayor oferta (desempate por nro_oferta mas bajo = la mas temprana en alcanzar el maximo)
+    SELECT email_usuario, monto INTO v_email, v_monto
+      FROM oferta
+     WHERE id_subasta = p_id
+     ORDER BY monto DESC, nro_oferta ASC
+     LIMIT 1;
+
+    IF NOT FOUND THEN
+        RETURN;  -- cerro sin ofertas: no se modifica nada, sin error
+    END IF;
+
+    UPDATE subasta
+       SET email_ganador = v_email,
+           monto_ganador = v_monto
+     WHERE id = p_id;
+END;
+$$ LANGUAGE plpgsql;
