@@ -1,0 +1,32 @@
+id,descripcion,categoria,email_vendedor,fecha_inicio,fecha_cierre,precio_base,incremento_min
+100,Cuadro al óleo San Telmo,Arte,elena.garcia@mail.com,2026-05-01 10:00:00,2026-07-15 18:00:00,50000.00,5000.00
+101,Acuarela paisaje patagónico,Arte,elena.garcia@mail.com,2026-05-28 00:00:00,2026-06-21 23:00:00,280000.00,2000.00
+102,Litografía firmada Quinquela,Arte,hernan.diaz@mail.com,2026-05-16 00:00:00,2026-08-04 22:00:00,588000.00,10000.00
+103,Boceto carbonilla retrato,Arte,marta.ortiz@mail.com,2026-05-13 00:00:00,2026-08-21 01:00:00,500000.00,1000.00
+104,Pintura abstracta acrílico,Arte,bruno.martinez@mail.com,2026-02-08 05:00:00,2026-03-01 05:00:00,226000.00,1000.00
+105,Grabado vintage 1940,Arte,federico.romero@mail.com,2026-05-16 00:00:00,2026-07-03 19:00:00,205000.00,2000.00
+106,Cámara Canon EOS 80D,Electrónica,ulises.vargas@mail.com,2026-05-16 00:00:00,2026-09-03 06:00:00,541000.00,10000.00
+107,Equipo audio vintage Marantz,Electrónica,tatiana.nunez@mail.com,2026-06-01 00:00:00,2026-06-27 03:00:00,193000.00,10000.00
+108,Tablet Samsung 11 pulgadas,Electrónica,victoria.reyes@mail.com,2026-03-04 08:00:00,2026-03-22 08:00:00,596000.00,1000.00
+109,Reloj smartwatch deportivo,Electrónica,lucas.acosta@mail.com,2026-01-30 08:00:00,2026-02-28 08:00:00,233000.00,2000.00
+110,Consola retro PlayStation 1,Electrónica,carla.perez@mail.com,2026-06-04 00:00:00,2026-09-01 07:00:00,276000.00,1000.00
+111,Auriculares Sennheiser HD,Electrónica,marta.ortiz@mail.com,2026-05-19 00:00:00,2026-10-01 06:00:00,235000.00,5000.00
+112,Primera edición Borges Ficciones,Libros,carla.perez@mail.com,2026-06-03 00:00:00,2026-06-30 07:00:00,62000.00,5000.00
+113,Colección completa Mafalda,Libros,ximena.aguirre@mail.com,2026-03-03 13:00:00,2026-03-26 13:00:00,450000.00,10000.00
+114,Atlas histórico mundial 1920,Libros,hernan.diaz@mail.com,2026-05-24 00:00:00,2026-07-10 01:00:00,377000.00,1000.00
+115,Saga Tolkien tapa dura,Libros,olivia.castro@mail.com,2026-04-03 16:00:00,2026-04-27 16:00:00,285000.00,1000.00
+116,Manuscrito poesía siglo XIX,Libros,ana.lopez@mail.com,2026-06-04 00:00:00,2026-08-08 12:00:00,198000.00,10000.00
+117,Diccionario Larousse 1950,Libros,sergio.cruz@mail.com,2026-05-26 00:00:00,2026-06-30 23:00:00,88000.00,1000.00
+118,Ford T 1925 restaurado,Vehículos,nicolas.rios@mail.com,2026-02-09 17:00:00,2026-03-09 17:00:00,70000.00,1000.00
+119,Moto Zanella 50cc,Vehículos,elena.garcia@mail.com,2026-05-19 00:00:00,2026-07-10 02:00:00,248000.00,5000.00
+120,Scooter eléctrico 250W,Vehículos,victoria.reyes@mail.com,2026-05-15 00:00:00,2026-10-28 00:00:00,597000.00,5000.00
+121,Triciclo niño vintage,Vehículos,joaquin.vega@mail.com,2026-04-10 01:00:00,2026-05-07 01:00:00,189000.00,5000.00
+122,Figura Star Wars sellada,Coleccionables,romina.mendez@mail.com,2026-05-13 00:00:00,2026-08-21 05:00:00,482000.00,10000.00
+123,Camiseta Maradona 86 réplica,Coleccionables,sergio.cruz@mail.com,2026-01-25 20:00:00,2026-02-21 20:00:00,66000.00,5000.00
+124,Estampillas Argentina serie completa,Coleccionables,nicolas.rios@mail.com,2026-06-05 00:00:00,2026-07-30 13:00:00,213000.00,5000.00
+125,Moneda romana siglo III,Coleccionables,karina.molina@mail.com,2026-06-05 00:00:00,2026-08-12 07:00:00,227000.00,10000.00
+126,Vinilo Beatles White Album,Coleccionables,diego.sanchez@mail.com,2026-05-31 00:00:00,2026-07-14 08:00:00,301000.00,1000.00
+127,Reloj de péndulo restaurado,Coleccionables,tatiana.nunez@mail.com,2026-05-23 00:00:00,2026-08-04 11:00:00,101000.00,5000.00
+150,Notebook gamer i7 16GB,Electrónica,joaquin.vega@mail.com,2026-03-01 09:00:00,2026-04-30 23:00:00,200000.00,10000.00
+200,Escultura bronce mediana,Arte,lucas.acosta@mail.com,2026-02-10 12:00:00,2026-03-31 20:00:00,180000.00,10000.00
+300,Bicicleta de ruta carbono,Vehículos,romina.mendez@mail.com,2026-05-15 08:00:00,2026-08-30 22:00:00,350000.00,10000.00
