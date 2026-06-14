@@ -41,3 +41,24 @@ CREATE TABLE oferta (
     monto         NUMERIC(12,2) NOT NULL,
     PRIMARY KEY (id_subasta, nro_oferta)                 -- entidad debil
 );
+
+-- -----------------------------------------------------------------------------
+-- 2. Trigger b - autopoblar vendedores (sobre SUBASTA)
+-- -----------------------------------------------------------------------------
+-- Al insertar una subasta, si el email_vendedor no existe en USUARIO se inserta;
+-- si ya existe, no hace nada. Es BEFORE INSERT para que la FK email_vendedor ->
+-- usuario quede satisfecha al momento de insertar la subasta.
+CREATE OR REPLACE FUNCTION trg_subasta_autopoblar_vendedor()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM usuario WHERE email = NEW.email_vendedor) THEN
+        INSERT INTO usuario(email) VALUES (NEW.email_vendedor);
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER subasta_bi
+BEFORE INSERT ON subasta
+FOR EACH ROW
+EXECUTE FUNCTION trg_subasta_autopoblar_vendedor();
