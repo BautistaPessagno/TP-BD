@@ -193,3 +193,89 @@ BEGIN
      WHERE id = p_id;
 END;
 $$ LANGUAGE plpgsql;
+
+-- -----------------------------------------------------------------------------
+-- 6. Funcion reporte_subastas(p_desde, p_categoria) - reporte por categoria
+-- -----------------------------------------------------------------------------
+-- Recorre con un cursor explicito las subastas con fecha_cierre >= p_desde
+-- (opcionalmente filtradas por categoria), ordenadas por categoria (alfabetico)
+-- y por id. Imprime con RAISE NOTICE: encabezado, un bloque por categoria, un
+-- renglon por subasta (ganador y monto si existe, o cantidad de ofertas),
+-- subtotal por categoria y total general. Si no hay subastas, no imprime nada.
+CREATE OR REPLACE FUNCTION reporte_subastas(p_desde DATE, p_categoria VARCHAR DEFAULT NULL)
+RETURNS VOID AS $$
+DECLARE
+    cur CURSOR FOR
+        SELECT id, descripcion, categoria, precio_base, email_ganador, monto_ganador
+          FROM subasta
+         WHERE fecha_cierre >= p_desde
+           AND (p_categoria IS NULL OR categoria = p_categoria)
+         ORDER BY categoria ASC, id ASC;
+    rec        RECORD;
+    v_hay      BOOLEAN := FALSE;
+    v_cat      VARCHAR := NULL;
+    v_ofertas  INTEGER;
+    -- contadores por categoria
+    c_sub INTEGER; c_gan INTEGER; c_rec NUMERIC(14,2);
+    -- contadores totales
+    t_sub INTEGER := 0; t_gan INTEGER := 0; t_rec NUMERIC(14,2) := 0;
+BEGIN
+    OPEN cur;
+    LOOP
+        FETCH cur INTO rec;
+        EXIT WHEN NOT FOUND;
+
+        -- Encabezado (solo si hay al menos una fila)
+        IF NOT v_hay THEN
+            RAISE NOTICE '====== REPORTE DE SUBASTAS ======';
+            IF p_categoria IS NOT NULL THEN
+                RAISE NOTICE '   Categoría: %', p_categoria;
+            END IF;
+            RAISE NOTICE '   Desde: %', p_desde;
+            v_hay := TRUE;
+        END IF;
+
+        -- Cambio de categoria: cerrar subtotal anterior y abrir bloque nuevo
+        IF v_cat IS DISTINCT FROM rec.categoria THEN
+            IF v_cat IS NOT NULL THEN
+                RAISE NOTICE '   -- subtotal %: % subastas, % con ganador, $ % recaudado',
+                    v_cat, c_sub, c_gan, c_rec;
+            END IF;
+            v_cat := rec.categoria;
+            c_sub := 0; c_gan := 0; c_rec := 0;
+            RAISE NOTICE '';
+            RAISE NOTICE '== Categoría: % ==', rec.categoria;
+        END IF;
+
+        -- Cantidad de ofertas de la subasta (se muestra siempre)
+        SELECT COUNT(*) INTO v_ofertas FROM oferta WHERE id_subasta = rec.id;
+
+        -- Renglon de la subasta
+        IF rec.email_ganador IS NOT NULL THEN
+            RAISE NOTICE '   [#%] % - base $ % -> ganador % por $ % (% ofertas)',
+                rec.id, rec.descripcion, rec.precio_base, rec.email_ganador, rec.monto_ganador, v_ofertas;
+            c_gan := c_gan + 1;  t_gan := t_gan + 1;
+            c_rec := c_rec + rec.monto_ganador;  t_rec := t_rec + rec.monto_ganador;
+        ELSE
+            RAISE NOTICE '   [#%] % - base $ % -> sin ganador asignado (% ofertas)',
+                rec.id, rec.descripcion, rec.precio_base, v_ofertas;
+        END IF;
+        c_sub := c_sub + 1;  t_sub := t_sub + 1;
+    END LOOP;
+
+    -- Subtotal de la ultima categoria
+    IF v_cat IS NOT NULL THEN
+        RAISE NOTICE '   -- subtotal %: % subastas, % con ganador, $ % recaudado',
+            v_cat, c_sub, c_gan, c_rec;
+    END IF;
+
+    -- Total general (solo si hubo datos)
+    IF v_hay THEN
+        RAISE NOTICE '';
+        RAISE NOTICE '======== TOTAL: % subastas, % con ganador, $ % recaudado ========',
+            t_sub, t_gan, t_rec;
+    END IF;
+
+    CLOSE cur;
+END;
+$$ LANGUAGE plpgsql;
